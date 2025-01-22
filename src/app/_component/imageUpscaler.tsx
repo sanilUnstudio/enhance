@@ -121,6 +121,7 @@ const ImageUpscaler = () => {
             toast({
                 className: "bg-black text-white border border-white border-opacity-40",
                 variant: "destructive",
+                title: `Status code - ${error.status}`,
                 description: "An error occurred while upscaling. Please try again.",
             })
         }
