@@ -19,30 +19,32 @@ export async function POST(request: Request) {
             {
                 input: {
                     "mask": mask,
-                    seed: 1337,
-                    image: image,
-                    prompt: "masterpiece, best quality, highres, <lora:more_details:0.5> <lora:SDXLrender_v2.0:1>",
-                    dynamic: 6,
-                    scheduler: "DPM++ 3M SDE Karras",
-                    creativity: 0.35,
-                    resemblance: 0.6,
-                    scale_factor: scale,
-                    negative_prompt: "(worst quality, low quality, normal quality:2) JuggernautNegative-neg",
-                    num_inference_steps: 18
+                    "seed": 1188,
+                    "image": image,
+                    "prompt": "masterpiece, best quality, highres, <lora:more_details:0.5> <lora:SDXLrender_v2.0:1>",
+                    "dynamic": 6,
+                    "handfix": "disabled",
+                    "pattern": false,
+                    "sharpen": 0,
+                    "sd_model": "juggernaut_reborn.safetensors [338b85bc4f]",
+                    "scheduler": "DPM++ 3M SDE Karras",
+                    "creativity": 0.35,
+                    "lora_links": "",
+                    "downscaling": true,
+                    "resemblance": 0.6,
+                    "scale_factor": scale,
+                    "tiling_width": 112,
+                    "output_format": "png",
+                    "tiling_height": 144,
+                    "custom_sd_model": "",
+                    "negative_prompt": "(worst quality, low quality, normal quality:2) JuggernautNegative-neg",
+                    "num_inference_steps": 18,
+                    "downscaling_resolution": 768
                 }
             }
         );
-        if (output && output[0]) {
-            // Get the binary data from the FileOutput
-            const response = await fetch(output[0]);
-            const arrayBuffer = await response.arrayBuffer();
-            const base64Image = Buffer.from(arrayBuffer).toString('base64');
-            const dataUrl = `data:image/webp;base64,${base64Image}`;
-            return NextResponse.json({ output: dataUrl });
-        }
 
-
-        return NextResponse.json({ error: "No output received" });
+        return NextResponse.json({ output: output[0].toString() });
     } catch (error) {
         console.error("Error with Replicate API:", error);
         return NextResponse.json(
