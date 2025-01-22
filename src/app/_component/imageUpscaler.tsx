@@ -15,7 +15,10 @@ import { Loader2, X } from 'lucide-react';
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-
+import Replicate from "replicate";
+const replicate = new Replicate({
+    auth: process.env.REPLICATE_API_TOKEN,
+});
 
 const ImageUpscaler = () => {
     const [image, setImage] = useState(null);
@@ -93,12 +96,38 @@ const ImageUpscaler = () => {
                 return { key, url };
             }))
 
-            const replicateResponse = await axios.post('/api/upscale', {
-                mask: urls[0].url,
-                image: urls[1].url,
-                scale: Number(scale)
-            })
+           
+            const output = await replicate.run(
+                "philz1337x/clarity-upscaler:dfad41707589d68ecdccd1dfa600d55a208f9310748e44bfe35b4a6291453d5e",
+                {
+                    input: {
+                        "mask": urls[0].url,
+                        "seed": 1188,
+                        "image": urls[1].url,
+                        "prompt": "masterpiece, best quality, highres, <lora:more_details:0.5> <lora:SDXLrender_v2.0:1>",
+                        "dynamic": 6,
+                        "handfix": "disabled",
+                        "pattern": false,
+                        "sharpen": 0,
+                        "sd_model": "juggernaut_reborn.safetensors [338b85bc4f]",
+                        "scheduler": "DPM++ 3M SDE Karras",
+                        "creativity": 0.35,
+                        "lora_links": "",
+                        "downscaling": true,
+                        "resemblance": 0.6,
+                        "scale_factor": Number(scale),
+                        "tiling_width": 112,
+                        "output_format": "png",
+                        "tiling_height": 144,
+                        "custom_sd_model": "",
+                        "negative_prompt": "(worst quality, low quality, normal quality:2) JuggernautNegative-neg",
+                        "num_inference_steps": 18,
+                        "downscaling_resolution": 768
+                    }
+                }
+            );
 
+            const replicateResponse = output[0].toString();
             if (replicateResponse.status !== 200) {
                 toast({
                     className: "bg-black text-white border border-white border-opacity-40",
