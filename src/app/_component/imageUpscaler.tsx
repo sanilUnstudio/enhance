@@ -12,9 +12,10 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Loader2, X } from 'lucide-react';
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 
 const ImageUpscaler = () => {
@@ -23,7 +24,8 @@ const ImageUpscaler = () => {
     const [scale, setScale] = useState<string | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState(null);
-    const { toast } = useToast()
+    const { toast } = useToast();
+    const router = useRouter();
 
 
     // Load an image onto the canvas
@@ -146,10 +148,12 @@ const ImageUpscaler = () => {
 
     return (
         <div className="bg-black h-screen text-white  pt-8">
+
             <h1 className="text-center text-2xl ">Image Upscaler</h1>
+          
 
             {!result ? <div className="flex flex-col gap-6">
-                <div className="mx-auto w-10/12">
+                <div className="mx-auto w-10/12 flex items-center justify-between">
                     <Select value={scale} onValueChange={setScale}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue className="text-white" placeholder="Select Scale value" />
@@ -166,6 +170,7 @@ const ImageUpscaler = () => {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                    <Button onClick={()=> router.push('/recraft')} className="border border-white border-opacity-40 p-2 rounded-lg">Recraft Upscale</Button>
                 </div>
 
 
