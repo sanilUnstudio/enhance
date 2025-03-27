@@ -4,6 +4,11 @@ export const resizeImageWBg = async ({ file, targetWidth, targetHeight }) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
+
+
+
+    
+
     reader.onload = (e) => {
       const base = e.target.result;
       const fabricCanvas = new fabric.Canvas("canvas", {
